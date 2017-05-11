@@ -2,7 +2,7 @@
 import urllib.request
 import re,sys,zipfile
 import schedule
-import time
+import time,os
 
 # def job():
 #Getting GDELT Event url content into a format that can be manipulated
@@ -22,14 +22,16 @@ fin_url = ( "http://data.gdeltproject.org/events/" + curr_file)
 #Function to display progress percentage of download
 def dlProgress(count, blockSize, totalSize):
   percent = int(count*blockSize*100/totalSize)
-  sys.stdout.write("\r" + curr_file + "...%d%%" % percent + "\n")
+  sys.stdout.write("\r" + curr_file + "...%d%%" % percent)
   sys.stdout.flush()
 #Download today's file
 urllib.request.urlretrieve(fin_url, curr_file,reporthook=dlProgress)
+sys.stdout.write("\n")
 #Extracting the zip file into csv
 zip = zipfile.ZipFile(curr_file)
 zip.extractall()
-
+#Remove zip file
+os.remove(curr_file)
 # schedule.every(5).minutes.do(job)
 # schedule.every().hour.do(job)
 # schedule.every().day.at("10:30").do(job)
